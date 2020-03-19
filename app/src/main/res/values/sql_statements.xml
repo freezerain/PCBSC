@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="drop_builds_table">DROP TABLE if exists Builds;</string>
+    <string name="create_builds_table">
+        create table if not exists Builds (id INTEGER primary key, min_price INTEGER, cpu_price INTEGER, gpu_price INTEGER, ram_price INTEGER,
+                                    cpu_wattage INTEGER, gpu_wattage INTEGER, level INTEGER, percent_through INTEGER, cpu TEXT, gpu TEXT,
+                                    ram TEXT, cpu_score_1 INTEGER, cpu_score_2 INTEGER, cpu_score_3 INTEGER, cpu_score_4 INTEGER,
+                                    gpu_score INTEGER, dual_gpu_score INTEGER, min_score INTEGER);
+    </string>
+    <string name="generate_builds_table">
+        insert into Builds(min_price, cpu_price, gpu_price, ram_price, cpu_wattage, gpu_wattage, level,
+                            percent_through, cpu, gpu, ram, cpu_score_1, cpu_score_2, cpu_score_3,
+                            cpu_score_4, gpu_score, dual_gpu_score, min_score)
+        select * from BuildSelect;
+    </string>
+</resources>

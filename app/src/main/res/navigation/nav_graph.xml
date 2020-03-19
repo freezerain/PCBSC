@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/landing">
+
+
+    <fragment
+        android:id="@+id/landing"
+        android:name="com.freeze.pcbsc.landing"
+        android:label="landing"
+        tools:layout="@layout/landing">
+        <action
+            android:id="@+id/action_landing_to_settings"
+            app:destination="@id/settings" />
+        <action
+            android:id="@+id/action_landing_to_gpu_by_cpu"
+            app:destination="@id/gpu_by_cpu" />
+        <action
+            android:id="@+id/action_landing_to_buildsFragment"
+            app:destination="@id/buildsFragment"
+            app:popUpTo="@+id/landing"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment android:id="@+id/settings" />
+    <fragment android:id="@+id/gpu_by_cpu" />
+    <fragment
+        android:id="@+id/buildsFragment"
+        android:name="com.freeze.pcbsc.BuildsFragment"
+        android:label="builds"
+        tools:layout="@layout/builds"/>
+</navigation>

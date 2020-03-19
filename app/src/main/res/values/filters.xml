@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="price">price</string>
+    <string name="level">level</string>
+    <string name="percentThrough">percentThrough</string>
+    <string name="score">score</string>
+    <string name="wattage">wattage</string>
+    <string name="isDualGPU">isDualGPU</string>
+    <string name="isInShop">isInShop</string>
+    <string name="isWaterCooled">isWaterCooled</string>
+    <string name="channel1">channel1</string>
+    <string name="channel2">channel2</string>
+    <string name="channel3">channel3</string>
+    <string name="channel4">channel4</string>
+
+</resources>

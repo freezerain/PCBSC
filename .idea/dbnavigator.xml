@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DBNavigator.Project.DataEditorManager">
+    <record-view-column-sorting-type value="BY_INDEX" />
+    <value-preview-text-wrapping value="false" />
+    <value-preview-pinned value="false" />
+  </component>
+  <component name="DBNavigator.Project.DataExportManager">
+    <export-instructions>
+      <create-header value="true" />
+      <quote-values-containing-separator value="true" />
+      <quote-all-values value="false" />
+      <value-separator value="" />
+      <file-name value="" />
+      <file-location value="" />
+      <scope value="GLOBAL" />
+      <destination value="FILE" />
+      <format value="EXCEL" />
+      <charset value="windows-1251" />
+    </export-instructions>
+  </component>
+  <component name="DBNavigator.Project.DatabaseBrowserManager">
+    <autoscroll-to-editor value="false" />
+    <autoscroll-from-editor value="true" />
+    <show-object-properties value="false" />
+    <loaded-nodes>
+      <connection connection-id="8007ac03-eedf-4fa1-a7f3-ab1061281acf">
+        <schema name="main" object-types="table, view" />
+      </connection>
+    </loaded-nodes>
+  </component>
+  <component name="DBNavigator.Project.DatabaseConsoleManager">
+    <connection id="8007ac03-eedf-4fa1-a7f3-ab1061281acf">
+      <console name="Recreate Build Table" type="STANDARD" schema="main" session="Main">DROP TABLE if exists Builds;
+create table if not exists Builds( id INTEGER primary key, price INTEGER, score INTEGER, cpu_price integer, gpu_price integer, ram_price integer,
+            wattage INTEGER, cpu_wattage INTEGER, gpu_wattage INTEGER, level INTEGER, percent_through INTEGER, cpu TEXT, gpu TEXT, ram TEXT, 
+            is_dual INTEGER, channel INTEGER);</console>
+      <console name="SqlLibrary Test" type="STANDARD" schema="main" session="Main">insert into Builds(price , score , cpu_price , gpu_price , ram_price , wattage , cpu_wattage , gpu_wattage , level , percent_through , cpu , gpu , ram , is_dual , channel )  
+select (c.Price + g.Price + (r.Price*1)) as price, 
+cast(1 / ((0.15 / (298*((c.CoreClockMultiplier*c.Frequency)+(c.MemChannelsMultiplier*1)+(c.MemClockMultiplier*r.Frequency)+c.FinalAdjustment))) + 
+(0.85 / g.&quot;Single GPU Graphics Score&quot;)) as integer) as score, c.Price as cpu_price, g.Price as gpu_price, r.Price as ram_price, 
+(c.Wattage + 30 +g.Wattage) as wattage, c.Wattage as cpu_wattage, g.Wattage as gpu_wattage, max(c.Level, g.Level, r.Level) as level, 
+case when cast(c.Level as integer) &gt; cast(g.Level as integer)               
+then case when cast(c.Level as integer) &gt; cast(r.Level as integer)                         
+then case when c.&quot;Percent Through&quot; != &quot;1&quot;                                   then 1 else 0 end                         
+else case when cast(c.Level as integer) &lt; cast(r.Level as integer)                                   
+then case when r.&quot;Percent Through&quot; != &quot;1&quot;                                             then 1 else 0 end                                   
+else case when max(cast(c.&quot;Percent Through&quot; as integer), cast(r.&quot;Percent Through&quot; as integer)) &gt; 1                                             
+then 1 else 0 end                                   end                         end               
+else case when cast(c.Level as integer) &lt; cast(g.Level as integer)                          
+then case when g.&quot;Percent Through&quot; != &quot;1&quot;                                    then 1 else 0 end                         
+else case when max(cast(c.&quot;Percent Through&quot; as integer), cast(g.&quot;Percent Through&quot; as integer)) &gt; 1                                    
+then 1 else 0 end                         end               end               
+as percent_through, c.&quot;Part Name&quot; as cpu, g.&quot;Part Name&quot; as gpu, r.&quot;Part Name&quot; as ram, 
+0 as is_dual, 1 as channel from CPUsTable as c cross join GPUsTable as g  cross join RAMsTable as r  
+where c.&quot;In Shop&quot; = &quot;Yes&quot; and g.&quot;In Shop&quot; =&quot;Yes&quot; and r.&quot;In Shop&quot; = &quot;Yes&quot;  and (c.Price + g.Price + (r.Price*1)) &lt;= 385 
+and cast(1 / ((0.15 / (298*((c.CoreClockMultiplier*c.Frequency)+(c.MemChannelsMultiplier*1)+(c.MemClockMultiplier*r.Frequency)+c.FinalAdjustment))) + 
+(0.85 / g.&quot;Single GPU Graphics Score&quot;)) as integer)  &gt;= 3000  
+order by Price limit 500;
+
+
+
+insert into Builds(price , score , cpu_price , gpu_price , ram_price , wattage , cpu_wattage , gpu_wattage , level , percent_through , cpu , gpu , ram , is_dual , channel )  
+select (c.Price + (g.Price * 2) + (r.Price*1)) as price, 
+cast(1 / ((0.15 / (298*((c.CoreClockMultiplier*c.Frequency)+(c.MemChannelsMultiplier*1)+(c.MemClockMultiplier*r.Frequency)+c.FinalAdjustment))) + 
+(0.85 / g.&quot;Double GPU Graphics Score&quot;)) as integer) as score, c.Price as cpu_price, g.Price as gpu_price, r.Price as ram_price, 
+(c.Wattage + 30 +(g.Wattage * 2)) as wattage, c.Wattage as cpu_wattage, g.Wattage as gpu_wattage, max(c.Level, g.Level, r.Level) as level, 
+case when cast(c.Level as integer) &gt; cast(g.Level as integer)               
+then case when cast(c.Level as integer) &gt; cast(r.Level as integer)                         
+then case when c.&quot;Percent Through&quot; != &quot;1&quot;                                   then 1 else 0 end                         
+else case when cast(c.Level as integer) &lt; cast(r.Level as integer)                                   
+then case when r.&quot;Percent Through&quot; != &quot;1&quot;                                             then 1 else 0 end                                   
+else case when max(cast(c.&quot;Percent Through&quot; as integer), cast(r.&quot;Percent Through&quot; as integer)) &gt; 1                                             
+then 1 else 0 end                                   end                         end               
+else case when cast(c.Level as integer) &lt; cast(g.Level as integer)                          
+then case when g.&quot;Percent Through&quot; != &quot;1&quot;                                    then 1 else 0 end                         
+else case when max(cast(c.&quot;Percent Through&quot; as integer), cast(g.&quot;Percent Through&quot; as integer)) &gt; 1                                    
+then 1 else 0 end                         end               end               
+as percent_through, c.&quot;Part Name&quot; as cpu, g.&quot;Part Name&quot; as gpu, r.&quot;Part Name&quot; as ram, 
+1 as is_dual, 1 as channel from CPUsTable as c cross join GPUsTable as g on cast(&quot;Double GPU Graphics Score&quot; as integer)&gt;0  cross join RAMsTable as r  
+where c.&quot;In Shop&quot; = &quot;Yes&quot; and g.&quot;In Shop&quot; =&quot;Yes&quot; and r.&quot;In Shop&quot; = &quot;Yes&quot;  and (c.Price + (g.Price * 2) + (r.Price*1)) &lt;= 385 
+and cast(1 / ((0.15 / (298*((c.CoreClockMultiplier*c.Frequency)+(c.MemChannelsMultiplier*1)+(c.MemClockMultiplier*r.Frequency)+c.FinalAdjustment))) + 
+(0.85 / g.&quot;Double GPU Graphics Score&quot;)) as integer)  &gt;= 3000  
+order by Price limit 500;</console>
+      <console name="myfin" type="STANDARD" schema="main" session="Main">select c.&quot;Level&quot; as cpu_level, c.&quot;Percent Through&quot; as cpu_percent,
+        g.&quot;Level&quot; as gpu_level, g.&quot;Percent Through&quot; as gpu_percent,
+        r.&quot;Level&quot; as ram_level, r.&quot;Percent Through&quot; as ram_percent,
+         max(cast(c.Level as integer), cast(g.Level as integer), cast(r.Level as integer)) as build_level,
+         case when cast(c.Level as integer) &gt; cast(g.Level as integer) 
+              then case when cast(c.Level as integer) &gt; cast(r.Level as integer)
+                        then case when c.&quot;Percent Through&quot; != &quot;1&quot; 
+                                  then 1 else 0 end
+                        else case when cast(c.Level as integer) &lt; cast(r.Level as integer) 
+                                  then case when r.&quot;Percent Through&quot; != &quot;1&quot; 
+                                            then 1 else 0 end
+                                  else case when max(cast(c.&quot;Percent Through&quot; as integer), cast(r.&quot;Percent Through&quot; as integer)) &gt; 1 
+                                            then 1 else 0 end
+                                  end
+                        end
+              else case when cast(c.Level as integer) &lt; cast(g.Level as integer) 
+                        then case when g.&quot;Percent Through&quot; != &quot;1&quot; 
+                                  then 1 else 0 end
+                        else case when max(cast(c.&quot;Percent Through&quot; as integer), cast(g.&quot;Percent Through&quot; as integer)) &gt; 1 
+                                  then 1 else 0 end
+                        end
+              end 
+              as percent_through,
+       c.&quot;Part Name&quot; as cpu, g.&quot;Part Name&quot; as gpu, r.&quot;Part Name&quot; as ram
+from CPUsTable as c cross join GPUsTable as g cross join RAMsTable as r
+where c.&quot;In Shop&quot; = &quot;Yes&quot; and g.&quot;In Shop&quot; =&quot;Yes&quot; and r.&quot;In Shop&quot; = &quot;Yes&quot;
+limit 1000;</console>
+      <console name="myfin 1" type="STANDARD" schema="main" session="Main">delete view BuildSelect;
+create view BuildSelect as 
+select (c.Price + g.Price + r.Price) as &quot;Min Price&quot;, c.&quot;Price&quot; as &quot;CPU Price&quot;, g.&quot;Price&quot; as &quot;GPU Price&quot;, r.Price as &quot;Ram Price&quot;,
+       c.Wattage as &quot;CPU Wattage&quot;, g.Wattage as &quot;GPU Wattage&quot;,
+       max(c.Level, g.Level, r.Level) as &quot;Level&quot;,
+       case c.&quot;Percent Through&quot;
+            when &quot;1&quot; then 
+                case g.&quot;Percent Through&quot; 
+                    when &quot;1&quot; then 
+                        case r.&quot;Percent Through&quot;
+                            when &quot;1&quot; then 0
+                        else 1 end
+                else 1 end
+       else 1 end as &quot;Percent Through&quot;,
+       c.&quot;Part Name&quot; as &quot;CPU&quot;, g.&quot;Part Name&quot; as &quot;GPU&quot;, r.&quot;Part Name&quot; as &quot;RAM&quot;,
+       cast((298 * ( (c.CoreClockMultiplier * c.Frequency) + (c.MemChannelsMultiplier * 1) + (c.MemClockMultiplier * r.Frequency) + c.FinalAdjustment)) as integer) as &quot;CPU Score 1&quot;,
+       cast((298 * ( (c.CoreClockMultiplier * c.Frequency) + (c.MemChannelsMultiplier * 2) + (c.MemClockMultiplier * r.Frequency) + c.FinalAdjustment)) as integer) as &quot;CPU Score 2&quot;,
+
+       case c.&quot;Max Memory Channels&quot;
+         when &quot;4&quot; then cast((298 * ( (c.CoreClockMultiplier * c.Frequency) + (c.MemChannelsMultiplier * 3) + (c.MemClockMultiplier * r.Frequency) + c.FinalAdjustment)) as integer)
+         else 0
+         end as &quot;CPU Score 3&quot;,
+       case c.&quot;Max Memory Channels&quot;
+         when &quot;4&quot; then cast((298 * ( (c.CoreClockMultiplier * c.Frequency) + (c.MemChannelsMultiplier * 4) + (c.MemClockMultiplier * r.Frequency) + c.FinalAdjustment)) as integer)
+         else 0
+         end as &quot;CPU Score 4&quot;,
+       g.&quot;Single GPU Graphics Score&quot; as &quot;GPU Score&quot;,  g.&quot;Double GPU Graphics Score&quot; as &quot;Dual GPU Score&quot;,
+       cast((1 / ( (0.15 / (298 * ( (c.CoreClockMultiplier * c.Frequency) + (c.MemChannelsMultiplier * 1) + (c.MemClockMultiplier * r.Frequency) + c.FinalAdjustment))) +
+                   (0.85 / g.&quot;Single GPU Graphics Score&quot;))) as integer) as &quot;Min Score&quot;
+from CPUsTable as c
+       cross join GPUsTable as g
+       cross join RAMsTable as r
+where c.&quot;In Shop&quot; = &quot;Yes&quot; and g.&quot;In Shop&quot; =&quot;Yes&quot; and r.&quot;In Shop&quot; = &quot;Yes&quot;
+order by &quot;Min Price&quot;, &quot;Min Score&quot;</console>
+      <console name="myfin 2" type="STANDARD" schema="main" session="Main">DROP TABLE if exists Builds;
+ create table if not exists Builds (id INTEGER primary key, min_price INTEGER, cpu_price INTEGER, gpu_price INTEGER, ram_price INTEGER,
+                                    cpu_wattage INTEGER, gpu_wattage INTEGER, level INTEGER, percent_through INTEGER, cpu TEXT, gpu TEXT,
+                                    ram TEXT, cpu_score_1 INTEGER, cpu_score_2 INTEGER, cpu_score_3 INTEGER, cpu_score_4 INTEGER,
+                                    gpu_score INTEGER, dual_gpu_score INTEGER, min_score INTEGER);
+insert into Builds(min_price, cpu_price, gpu_price, ram_price, cpu_wattage, gpu_wattage, level,
+                            percent_through, cpu, gpu, ram, cpu_score_1, cpu_score_2, cpu_score_3,
+                            cpu_score_4, gpu_score, dual_gpu_score, min_score)
+        select * from BuildSelect;</console>
+      <console name="myfin 3" type="STANDARD" schema="main" session="Main">DROP TABLE if exists Builds;
+create table if not exists Builds(id INTEGER primary key, price INTEGER, score INTEGER, cpu_price integer, gpu_price integer, ram_price integer,
+                wattage INTEGER, cpu_wattage INTEGER, gpu_wattage INTEGER, level INTEGER, percent_through INTEGER, cpu TEXT, gpu TEXT, ram TEXT,
+                is_dual INTEGER, channel INTEGER);
+
+insert into Builds(price INTEGER, score INTEGER, cpu_price integer, gpu_price integer, ram_price integer, wattage INTEGER, 
+cpu_wattage INTEGER, gpu_wattage INTEGER, level INTEGER, percent_through INTEGER, cpu TEXT, gpu TEXT, ram TEXT, is_dual INTEGER, channel INTEGER) 
+select (c.Price + g.Price + (r.Price*1)) as price, 
+cast(1 / ((0.15 / (298*((c.CoreClockMultiplier*c.Frequency)+(c.MemChannelsMultiplier*1)+(c.MemClockMultiplier*r.Frequency)+c.FinalAdjustment))) + (0.85 / g.&quot;Single GPU Graphics Score&quot;)) as integer) as score, c.Price as cpu_price, g.Price as gpu_price, r.Price as ram_price, (c.Wattage + 30 +g.Wattage) as wattage, c.Wattage as cpu_wattage, g.Wattage as gpu_wattage, max(c.Level, g.Level, r.Level) as level, case when cast(c.Level as integer) &gt; cast(g.Level as integer)               then case when cast(c.Level as integer) &gt; cast(r.Level as integer)                         then case when c.&quot;Percent Through&quot; != &quot;1&quot;                                   then 1 else 0 end                         else case when cast(c.Level as integer) &lt; cast(r.Level as integer)                                   then case when r.&quot;Percent Through&quot; != &quot;1&quot;                                             then 1 else 0 end                                   else case when max(cast(c.&quot;Percent Through&quot; as integer), cast(r.&quot;Percent Through&quot; as integer)) &gt; 1                                             then 1 else 0 end                                   end                         end               else case when cast(c.Level as integer) &lt; cast(g.Level as integer)                          then case when g.&quot;Percent Through&quot; != &quot;1&quot;                                    then 1 else 0 end                         else case when max(cast(c.&quot;Percent Through&quot; as integer), cast(g.&quot;Percent Through&quot; as integer)) &gt; 1                                    then 1 else 0 end                         end               end               as percent_through, c.&quot;Part Name&quot; as cpu, g.&quot;Part Name&quot; as gpu, r.&quot;Part Name&quot; as ram, 0 as is_dual, 1 as channel from CPUsTable as c cross join GPUsTable as g  cross join RAMsTable as r where c.&quot;In Shop&quot; = &quot;Yes&quot; 
+and g.&quot;In Shop&quot; =&quot;Yes&quot; and r.&quot;In Shop&quot; = &quot;Yes&quot;  order by Price, Score limit 500;</console>
+      <console name="myfin 4" type="STANDARD" schema="main" session="Main">select (c.Price + g.Price + r.Price) as &quot;Min Price&quot;, c.&quot;Price&quot; as &quot;CPU Price&quot;, g.&quot;Price&quot; as &quot;GPU Price&quot;, r.Price as &quot;Ram Price&quot;,
+       c.Wattage as &quot;CPU Wattage&quot;, g.Wattage as &quot;GPU Wattage&quot;,
+       max(c.Level, g.Level, r.Level) as &quot;Level&quot;,
+       case c.&quot;Percent Through&quot;
+            when &quot;1&quot; then 
+                case g.&quot;Percent Through&quot; 
+                    when &quot;1&quot; then 
+                        case r.&quot;Percent Through&quot;
+                            when &quot;1&quot; then 0
+                        else 1 end
+                else 1 end
+       else 1 end as &quot;Percent Through&quot;,
+       c.&quot;Part Name&quot; as &quot;CPU&quot;, g.&quot;Part Name&quot; as &quot;GPU&quot;, r.&quot;Part Name&quot; as &quot;RAM&quot;,
+       cast((298 * ( (c.CoreClockMultiplier * c.Frequency) + (c.MemChannelsMultiplier * 1) + (c.MemClockMultiplier * r.Frequency) + c.FinalAdjustment)) as integer) as &quot;CPU Score 1&quot;,
+       cast((298 * ( (c.CoreClockMultiplier * c.Frequency) + (c.MemChannelsMultiplier * 2) + (c.MemClockMultiplier * r.Frequency) + c.FinalAdjustment)) as integer) as &quot;CPU Score 2&quot;,
+
+       case c.&quot;Max Memory Channels&quot;
+         when &quot;4&quot; then cast((298 * ( (c.CoreClockMultiplier * c.Frequency) + (c.MemChannelsMultiplier * 3) + (c.MemClockMultiplier * r.Frequency) + c.FinalAdjustment)) as integer)
+         else 0
+         end as &quot;CPU Score 3&quot;,
+       case c.&quot;Max Memory Channels&quot;
+         when &quot;4&quot; then cast((298 * ( (c.CoreClockMultiplier * c.Frequency) + (c.MemChannelsMultiplier * 4) + (c.MemClockMultiplier * r.Frequency) + c.FinalAdjustment)) as integer)
+         else 0
+         end as &quot;CPU Score 4&quot;,
+       g.&quot;Single GPU Graphics Score&quot; as &quot;GPU Score&quot;,  g.&quot;Double GPU Graphics Score&quot; as &quot;Dual GPU Score&quot;,
+       cast((1 / ( (0.15 / (298 * ( (c.CoreClockMultiplier * c.Frequency) + (c.MemChannelsMultiplier * 1) + (c.MemClockMultiplier * r.Frequency) + c.FinalAdjustment))) +
+                   (0.85 / g.&quot;Single GPU Graphics Score&quot;))) as integer) as &quot;Min Score&quot;
+from CPUsTable as c
+       cross join GPUsTable where &quot;Percent Through&quot; &lt; 1 as g
+       cross join RAMsTable as r
+where c.&quot;In Shop&quot; = &quot;Yes&quot; and g.&quot;In Shop&quot; =&quot;Yes&quot; and r.&quot;In Shop&quot; = &quot;Yes&quot;
+ and &quot;Min Price&quot; &lt; 150 
+order by &quot;Min Price&quot;, &quot;Min Score&quot;</console>
+    </connection>
+  </component>
+  <component name="DBNavigator.Project.DatabaseFileManager">
+    <open-files />
+  </component>
+  <component name="DBNavigator.Project.DatabaseSessionManager">
+    <connection id="8007ac03-eedf-4fa1-a7f3-ab1061281acf" />
+  </component>
+  <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="8007ac03-eedf-4fa1-a7f3-ab1061281acf" dataset="main.WaterCooledGPUsTable" active-filter-id="" />
+    <filter-actions connection-id="8007ac03-eedf-4fa1-a7f3-ab1061281acf" dataset="main.BuildsSelect" active-filter-id="" />
+    <filter-actions connection-id="8007ac03-eedf-4fa1-a7f3-ab1061281acf" dataset="main.CPUsTable" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="8007ac03-eedf-4fa1-a7f3-ab1061281acf" dataset="main.BuildsTable" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="8007ac03-eedf-4fa1-a7f3-ab1061281acf" dataset="main.BuildSelect" active-filter-id="" />
+    <filter-actions connection-id="8007ac03-eedf-4fa1-a7f3-ab1061281acf" dataset="main.Builds" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="8007ac03-eedf-4fa1-a7f3-ab1061281acf" dataset="main.SomeTable" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="8007ac03-eedf-4fa1-a7f3-ab1061281acf" dataset="main.RAMsTable" active-filter-id="EMPTY_FILTER" />
+  </component>
+  <component name="DBNavigator.Project.EditorStateManager">
+    <last-used-providers>
+      <object-type object-type="VIEW" editor-provider="CODE" />
+    </last-used-providers>
+  </component>
+  <component name="DBNavigator.Project.MethodExecutionManager">
+    <method-browser />
+    <execution-history>
+      <group-entries value="true" />
+      <execution-inputs />
+    </execution-history>
+    <argument-values-cache />
+  </component>
+  <component name="DBNavigator.Project.ObjectDependencyManager">
+    <last-used-dependency-type value="INCOMING" />
+  </component>
+  <component name="DBNavigator.Project.ObjectQuickFilterManager">
+    <last-used-operator value="EQUAL" />
+    <filters />
+  </component>
+  <component name="DBNavigator.Project.ScriptExecutionManager" clear-outputs="true">
+    <recently-used-interfaces>
+      <mapping database-type="SQLITE" interface-id="DEFAULT" />
+    </recently-used-interfaces>
+  </component>
+  <component name="DBNavigator.Project.Settings">
+    <connections>
+      <connection id="8007ac03-eedf-4fa1-a7f3-ab1061281acf" active="true">
+        <database>
+          <name value="myfin" />
+          <description value="" />
+          <database-type value="SQLITE" />
+          <config-type value="BASIC" />
+          <database-version value="3.21" />
+          <driver-source value="BUILTIN" />
+          <driver-library value="D:\Soft\Projects\android\pcbs\sqlite-jdbc-3.27.2.1.jar" />
+          <driver value="" />
+          <url-type value="FILE" />
+          <host value="localhost" />
+          <port value="1234" />
+          <database value="database" />
+          <files>
+            <file path="D:\Soft\Projects\android\pcbs\app\src\main\assets\databases\myfin.db" schema="main" />
+          </files>
+          <type value="NONE" />
+          <user value="" />
+          <deprecated-pwd value="" />
+        </database>
+        <properties>
+          <auto-commit value="true" />
+        </properties>
+        <ssh-settings>
+          <active value="false" />
+          <proxy-host value="" />
+          <proxy-port value="22" />
+          <proxy-user value="" />
+          <deprecated-proxy-pwd value="" />
+          <auth-type value="PASSWORD" />
+          <key-file value="" />
+          <key-passphrase value="" />
+        </ssh-settings>
+        <ssl-settings>
+          <active value="false" />
+          <certificate-authority-file value="" />
+          <client-certificate-file value="" />
+          <client-key-file value="" />
+        </ssl-settings>
+        <details>
+          <charset value="UTF-8" />
+          <session-management value="true" />
+          <ddl-file-binding value="true" />
+          <database-logging value="false" />
+          <connect-automatically value="true" />
+          <restore-workspace value="true" />
+          <restore-workspace-deep value="true" />
+          <environment-type value="default" />
+          <idle-time-to-disconnect value="30" />
+          <idle-time-to-disconnect-pool value="5" />
+          <credential-expiry-time value="10" />
+          <max-connection-pool-size value="7" />
+          <alternative-statement-delimiter value="" />
+        </details>
+        <object-filters hide-empty-schemas="false" hide-pseudo-columns="false">
+          <object-type-filter use-master-settings="true">
+            <object-type name="SCHEMA" enabled="true" />
+            <object-type name="USER" enabled="true" />
+            <object-type name="ROLE" enabled="true" />
+            <object-type name="PRIVILEGE" enabled="true" />
+            <object-type name="CHARSET" enabled="true" />
+            <object-type name="TABLE" enabled="true" />
+            <object-type name="VIEW" enabled="true" />
+            <object-type name="MATERIALIZED_VIEW" enabled="true" />
+            <object-type name="NESTED_TABLE" enabled="true" />
+            <object-type name="COLUMN" enabled="true" />
+            <object-type name="INDEX" enabled="true" />
+            <object-type name="CONSTRAINT" enabled="true" />
+            <object-type name="DATASET_TRIGGER" enabled="true" />
+            <object-type name="DATABASE_TRIGGER" enabled="true" />
+            <object-type name="SYNONYM" enabled="true" />
+            <object-type name="SEQUENCE" enabled="true" />
+            <object-type name="PROCEDURE" enabled="true" />
+            <object-type name="FUNCTION" enabled="true" />
+            <object-type name="PACKAGE" enabled="true" />
+            <object-type name="TYPE" enabled="true" />
+            <object-type name="TYPE_ATTRIBUTE" enabled="true" />
+            <object-type name="ARGUMENT" enabled="true" />
+            <object-type name="DIMENSION" enabled="true" />
+            <object-type name="CLUSTER" enabled="true" />
+            <object-type name="DBLINK" enabled="true" />
+          </object-type-filter>
+          <object-name-filters />
+        </object-filters>
+      </connection>
+    </connections>
+    <browser-settings>
+      <general>
+        <display-mode value="TABBED" />
+        <navigation-history-size value="100" />
+        <show-object-details value="false" />
+      </general>
+      <filters>
+        <object-type-filter>
+          <object-type name="SCHEMA" enabled="true" />
+          <object-type name="USER" enabled="true" />
+          <object-type name="ROLE" enabled="true" />
+          <object-type name="PRIVILEGE" enabled="true" />
+          <object-type name="CHARSET" enabled="true" />
+          <object-type name="TABLE" enabled="true" />
+          <object-type name="VIEW" enabled="true" />
+          <object-type name="MATERIALIZED_VIEW" enabled="true" />
+          <object-type name="NESTED_TABLE" enabled="true" />
+          <object-type name="COLUMN" enabled="true" />
+          <object-type name="INDEX" enabled="true" />
+          <object-type name="CONSTRAINT" enabled="true" />
+          <object-type name="DATASET_TRIGGER" enabled="true" />
+          <object-type name="DATABASE_TRIGGER" enabled="true" />
+          <object-type name="SYNONYM" enabled="true" />
+          <object-type name="SEQUENCE" enabled="true" />
+          <object-type name="PROCEDURE" enabled="true" />
+          <object-type name="FUNCTION" enabled="true" />
+          <object-type name="PACKAGE" enabled="true" />
+          <object-type name="TYPE" enabled="true" />
+          <object-type name="TYPE_ATTRIBUTE" enabled="true" />
+          <object-type name="ARGUMENT" enabled="true" />
+          <object-type name="DIMENSION" enabled="true" />
+          <object-type name="CLUSTER" enabled="true" />
+          <object-type name="DBLINK" enabled="true" />
+        </object-type-filter>
+      </filters>
+      <sorting>
+        <object-type name="COLUMN" sorting-type="NAME" />
+        <object-type name="FUNCTION" sorting-type="NAME" />
+        <object-type name="PROCEDURE" sorting-type="NAME" />
+        <object-type name="ARGUMENT" sorting-type="POSITION" />
+      </sorting>
+      <default-editors>
+        <object-type name="VIEW" editor-type="SELECTION" />
+        <object-type name="PACKAGE" editor-type="SELECTION" />
+        <object-type name="TYPE" editor-type="SELECTION" />
+      </default-editors>
+    </browser-settings>
+    <navigation-settings>
+      <lookup-filters>
+        <lookup-objects>
+          <object-type name="SCHEMA" enabled="true" />
+          <object-type name="USER" enabled="false" />
+          <object-type name="ROLE" enabled="false" />
+          <object-type name="PRIVILEGE" enabled="false" />
+          <object-type name="CHARSET" enabled="false" />
+          <object-type name="TABLE" enabled="true" />
+          <object-type name="VIEW" enabled="true" />
+          <object-type name="MATERIALIZED VIEW" enabled="true" />
+          <object-type name="NESTED TABLE" enabled="false" />
+          <object-type name="COLUMN" enabled="false" />
+          <object-type name="INDEX" enabled="true" />
+          <object-type name="CONSTRAINT" enabled="true" />
+          <object-type name="DATASET TRIGGER" enabled="true" />
+          <object-type name="DATABASE TRIGGER" enabled="true" />
+          <object-type name="SYNONYM" enabled="false" />
+          <object-type name="SEQUENCE" enabled="true" />
+          <object-type name="PROCEDURE" enabled="true" />
+          <object-type name="FUNCTION" enabled="true" />
+          <object-type name="PACKAGE" enabled="true" />
+          <object-type name="TYPE" enabled="true" />
+          <object-type name="TYPE ATTRIBUTE" enabled="false" />
+          <object-type name="ARGUMENT" enabled="false" />
+          <object-type name="DIMENSION" enabled="false" />
+          <object-type name="CLUSTER" enabled="false" />
+          <object-type name="DBLINK" enabled="true" />
+        </lookup-objects>
+        <force-database-load value="false" />
+        <prompt-connection-selection value="true" />
+        <prompt-schema-selection value="true" />
+      </lookup-filters>
+    </navigation-settings>
+    <dataset-grid-settings>
+      <general>
+        <enable-zooming value="true" />
+        <enable-column-tooltip value="true" />
+      </general>
+      <sorting>
+        <nulls-first value="true" />
+        <max-sorting-columns value="4" />
+      </sorting>
+      <tracking-columns>
+        <columnNames value="" />
+        <visible value="true" />
+        <editable value="false" />
+      </tracking-columns>
+    </dataset-grid-settings>
+    <dataset-editor-settings>
+      <text-editor-popup>
+        <active value="false" />
+        <active-if-empty value="false" />
+        <data-length-threshold value="100" />
+        <popup-delay value="1000" />
+      </text-editor-popup>
+      <values-actions-popup>
+        <show-popup-button value="true" />
+        <element-count-threshold value="1000" />
+        <data-length-threshold value="250" />
+      </values-actions-popup>
+      <general>
+        <fetch-block-size value="100" />
+        <fetch-timeout value="30" />
+        <trim-whitespaces value="true" />
+        <convert-empty-strings-to-null value="true" />
+        <select-content-on-cell-edit value="true" />
+        <large-value-preview-active value="true" />
+      </general>
+      <filters>
+        <prompt-filter-dialog value="true" />
+        <default-filter-type value="BASIC" />
+      </filters>
+      <qualified-text-editor text-length-threshold="300">
+        <content-types>
+          <content-type name="Text" enabled="true" />
+          <content-type name="Properties" enabled="true" />
+          <content-type name="XML" enabled="true" />
+          <content-type name="DTD" enabled="true" />
+          <content-type name="HTML" enabled="true" />
+          <content-type name="XHTML" enabled="true" />
+          <content-type name="Java" enabled="true" />
+          <content-type name="Groovy" enabled="true" />
+          <content-type name="AIDL" enabled="true" />
+          <content-type name="YAML" enabled="true" />
+          <content-type name="Manifest" enabled="true" />
+        </content-types>
+      </qualified-text-editor>
+      <record-navigation>
+        <navigation-target value="VIEWER" />
+      </record-navigation>
+    </dataset-editor-settings>
+    <code-editor-settings>
+      <general>
+        <show-object-navigation-gutter value="false" />
+        <show-spec-declaration-navigation-gutter value="true" />
+        <enable-spellchecking value="true" />
+        <enable-reference-spellchecking value="false" />
+      </general>
+      <confirmations>
+        <save-changes value="false" />
+        <revert-changes value="true" />
+      </confirmations>
+    </code-editor-settings>
+    <code-completion-settings>
+      <filters>
+        <basic-filter>
+          <filter-element type="RESERVED_WORD" id="keyword" selected="true" />
+          <filter-element type="RESERVED_WORD" id="function" selected="true" />
+          <filter-element type="RESERVED_WORD" id="parameter" selected="true" />
+          <filter-element type="RESERVED_WORD" id="datatype" selected="true" />
+          <filter-element type="RESERVED_WORD" id="exception" selected="true" />
+          <filter-element type="OBJECT" id="schema" selected="true" />
+          <filter-element type="OBJECT" id="role" selected="true" />
+          <filter-element type="OBJECT" id="user" selected="true" />
+          <filter-element type="OBJECT" id="privilege" selected="true" />
+          <user-schema>
+            <filter-element type="OBJECT" id="table" selected="true" />
+            <filter-element type="OBJECT" id="view" selected="true" />
+            <filter-element type="OBJECT" id="materialized view" selected="true" />
+            <filter-element type="OBJECT" id="index" selected="true" />
+            <filter-element type="OBJECT" id="constraint" selected="true" />
+            <filter-element type="OBJECT" id="trigger" selected="true" />
+            <filter-element type="OBJECT" id="synonym" selected="false" />
+            <filter-element type="OBJECT" id="sequence" selected="true" />
+            <filter-element type="OBJECT" id="procedure" selected="true" />
+            <filter-element type="OBJECT" id="function" selected="true" />
+            <filter-element type="OBJECT" id="package" selected="true" />
+            <filter-element type="OBJECT" id="type" selected="true" />
+            <filter-element type="OBJECT" id="dimension" selected="true" />
+            <filter-element type="OBJECT" id="cluster" selected="true" />
+            <filter-element type="OBJECT" id="dblink" selected="true" />
+          </user-schema>
+          <public-schema>
+            <filter-element type="OBJECT" id="table" selected="false" />
+            <filter-element type="OBJECT" id="view" selected="false" />
+            <filter-element type="OBJECT" id="materialized view" selected="false" />
+            <filter-element type="OBJECT" id="index" selected="false" />
+            <filter-element type="OBJECT" id="constraint" selected="false" />
+            <filter-element type="OBJECT" id="trigger" selected="false" />
+            <filter-element type="OBJECT" id="synonym" selected="false" />
+            <filter-element type="OBJECT" id="sequence" selected="false" />
+            <filter-element type="OBJECT" id="procedure" selected="false" />
+            <filter-element type="OBJECT" id="function" selected="false" />
+            <filter-element type="OBJECT" id="package" selected="false" />
+            <filter-element type="OBJECT" id="type" selected="false" />
+            <filter-element type="OBJECT" id="dimension" selected="false" />
+            <filter-element type="OBJECT" id="cluster" selected="false" />
+            <filter-element type="OBJECT" id="dblink" selected="false" />
+          </public-schema>
+          <any-schema>
+            <filter-element type="OBJECT" id="table" selected="true" />
+            <filter-element type="OBJECT" id="view" selected="true" />
+            <filter-element type="OBJECT" id="materialized view" selected="true" />
+            <filter-element type="OBJECT" id="index" selected="true" />
+            <filter-element type="OBJECT" id="constraint" selected="true" />
+            <filter-element type="OBJECT" id="trigger" selected="true" />
+            <filter-element type="OBJECT" id="synonym" selected="true" />
+            <filter-element type="OBJECT" id="sequence" selected="true" />
+            <filter-element type="OBJECT" id="procedure" selected="true" />
+            <filter-element type="OBJECT" id="function" selected="true" />
+            <filter-element type="OBJECT" id="package" selected="true" />
+            <filter-element type="OBJECT" id="type" selected="true" />
+            <filter-element type="OBJECT" id="dimension" selected="true" />
+            <filter-element type="OBJECT" id="cluster" selected="true" />
+            <filter-element type="OBJECT" id="dblink" selected="true" />
+          </any-schema>
+        </basic-filter>
+        <extended-filter>
+          <filter-element type="RESERVED_WORD" id="keyword" selected="true" />
+          <filter-element type="RESERVED_WORD" id="function" selected="true" />
+          <filter-element type="RESERVED_WORD" id="parameter" selected="true" />
+          <filter-element type="RESERVED_WORD" id="datatype" selected="true" />
+          <filter-element type="RESERVED_WORD" id="exception" selected="true" />
+          <filter-element type="OBJECT" id="schema" selected="true" />
+          <filter-element type="OBJECT" id="user" selected="true" />
+          <filter-element type="OBJECT" id="role" selected="true" />
+          <filter-element type="OBJECT" id="privilege" selected="true" />
+          <user-schema>
+            <filter-element type="OBJECT" id="table" selected="true" />
+            <filter-element type="OBJECT" id="view" selected="true" />
+            <filter-element type="OBJECT" id="materialized view" selected="true" />
+            <filter-element type="OBJECT" id="index" selected="true" />
+            <filter-element type="OBJECT" id="constraint" selected="true" />
+            <filter-element type="OBJECT" id="trigger" selected="true" />
+            <filter-element type="OBJECT" id="synonym" selected="true" />
+            <filter-element type="OBJECT" id="sequence" selected="true" />
+            <filter-element type="OBJECT" id="procedure" selected="true" />
+            <filter-element type="OBJECT" id="function" selected="true" />
+            <filter-element type="OBJECT" id="package" selected="true" />
+            <filter-element type="OBJECT" id="type" selected="true" />
+            <filter-element type="OBJECT" id="dimension" selected="true" />
+            <filter-element type="OBJECT" id="cluster" selected="true" />
+            <filter-element type="OBJECT" id="dblink" selected="true" />
+          </user-schema>
+          <public-schema>
+            <filter-element type="OBJECT" id="table" selected="true" />
+            <filter-element type="OBJECT" id="view" selected="true" />
+            <filter-element type="OBJECT" id="materialized view" selected="true" />
+            <filter-element type="OBJECT" id="index" selected="true" />
+            <filter-element type="OBJECT" id="constraint" selected="true" />
+            <filter-element type="OBJECT" id="trigger" selected="true" />
+            <filter-element type="OBJECT" id="synonym" selected="true" />
+            <filter-element type="OBJECT" id="sequence" selected="true" />
+            <filter-element type="OBJECT" id="procedure" selected="true" />
+            <filter-element type="OBJECT" id="function" selected="true" />
+            <filter-element type="OBJECT" id="package" selected="true" />
+            <filter-element type="OBJECT" id="type" selected="true" />
+            <filter-element type="OBJECT" id="dimension" selected="true" />
+            <filter-element type="OBJECT" id="cluster" selected="true" />
+            <filter-element type="OBJECT" id="dblink" selected="true" />
+          </public-schema>
+          <any-schema>
+            <filter-element type="OBJECT" id="table" selected="true" />
+            <filter-element type="OBJECT" id="view" selected="true" />
+            <filter-element type="OBJECT" id="materialized view" selected="true" />
+            <filter-element type="OBJECT" id="index" selected="true" />
+            <filter-element type="OBJECT" id="constraint" selected="true" />
+            <filter-element type="OBJECT" id="trigger" selected="true" />
+            <filter-element type="OBJECT" id="synonym" selected="true" />
+            <filter-element type="OBJECT" id="sequence" selected="true" />
+            <filter-element type="OBJECT" id="procedure" selected="true" />
+            <filter-element type="OBJECT" id="function" selected="true" />
+            <filter-element type="OBJECT" id="package" selected="true" />
+            <filter-element type="OBJECT" id="type" selected="true" />
+            <filter-element type="OBJECT" id="dimension" selected="true" />
+            <filter-element type="OBJECT" id="cluster" selected="true" />
+            <filter-element type="OBJECT" id="dblink" selected="true" />
+          </any-schema>
+        </extended-filter>
+      </filters>
+      <sorting enabled="true">
+        <sorting-element type="RESERVED_WORD" id="keyword" />
+        <sorting-element type="RESERVED_WORD" id="datatype" />
+        <sorting-element type="OBJECT" id="column" />
+        <sorting-element type="OBJECT" id="table" />
+        <sorting-element type="OBJECT" id="view" />
+        <sorting-element type="OBJECT" id="materialized view" />
+        <sorting-element type="OBJECT" id="index" />
+        <sorting-element type="OBJECT" id="constraint" />
+        <sorting-element type="OBJECT" id="trigger" />
+        <sorting-element type="OBJECT" id="synonym" />
+        <sorting-element type="OBJECT" id="sequence" />
+        <sorting-element type="OBJECT" id="procedure" />
+        <sorting-element type="OBJECT" id="function" />
+        <sorting-element type="OBJECT" id="package" />
+        <sorting-element type="OBJECT" id="type" />
+        <sorting-element type="OBJECT" id="dimension" />
+        <sorting-element type="OBJECT" id="cluster" />
+        <sorting-element type="OBJECT" id="dblink" />
+        <sorting-element type="OBJECT" id="schema" />
+        <sorting-element type="OBJECT" id="role" />
+        <sorting-element type="OBJECT" id="user" />
+        <sorting-element type="RESERVED_WORD" id="function" />
+        <sorting-element type="RESERVED_WORD" id="parameter" />
+      </sorting>
+      <format>
+        <enforce-code-style-case value="true" />
+      </format>
+    </code-completion-settings>
+    <execution-engine-settings>
+      <statement-execution>
+        <fetch-block-size value="100" />
+        <execution-timeout value="20" />
+        <debug-execution-timeout value="600" />
+        <focus-result value="false" />
+        <prompt-execution value="false" />
+      </statement-execution>
+      <script-execution>
+        <command-line-interfaces />
+        <execution-timeout value="300" />
+      </script-execution>
+      <method-execution>
+        <execution-timeout value="30" />
+        <debug-execution-timeout value="600" />
+        <parameter-history-size value="10" />
+      </method-execution>
+    </execution-engine-settings>
+    <operation-settings>
+      <transactions>
+        <uncommitted-changes>
+          <on-project-close value="ASK" />
+          <on-disconnect value="ASK" />
+          <on-autocommit-toggle value="ASK" />
+        </uncommitted-changes>
+        <multiple-uncommitted-changes>
+          <on-commit value="ASK" />
+          <on-rollback value="ASK" />
+        </multiple-uncommitted-changes>
+      </transactions>
+      <session-browser>
+        <disconnect-session value="ASK" />
+        <kill-session value="ASK" />
+        <reload-on-filter-change value="false" />
+      </session-browser>
+      <compiler>
+        <compile-type value="KEEP" />
+        <compile-dependencies value="ASK" />
+        <always-show-controls value="false" />
+      </compiler>
+      <debugger>
+        <debugger-type value="ASK" />
+        <use-generic-runners value="true" />
+      </debugger>
+    </operation-settings>
+    <ddl-file-settings>
+      <extensions>
+        <mapping file-type-id="VIEW" extensions="vw" />
+        <mapping file-type-id="TRIGGER" extensions="trg" />
+        <mapping file-type-id="PROCEDURE" extensions="prc" />
+        <mapping file-type-id="FUNCTION" extensions="fnc" />
+        <mapping file-type-id="PACKAGE" extensions="pkg" />
+        <mapping file-type-id="PACKAGE_SPEC" extensions="pks" />
+        <mapping file-type-id="PACKAGE_BODY" extensions="pkb" />
+        <mapping file-type-id="TYPE" extensions="tpe" />
+        <mapping file-type-id="TYPE_SPEC" extensions="tps" />
+        <mapping file-type-id="TYPE_BODY" extensions="tpb" />
+      </extensions>
+      <general>
+        <lookup-ddl-files value="true" />
+        <create-ddl-files value="false" />
+        <synchronize-ddl-files value="true" />
+        <use-qualified-names value="false" />
+        <make-scripts-rerunnable value="true" />
+      </general>
+    </ddl-file-settings>
+    <general-settings>
+      <regional-settings>
+        <date-format value="MEDIUM" />
+        <number-format value="UNGROUPED" />
+        <locale value="SYSTEM_DEFAULT" />
+        <use-custom-formats value="false" />
+      </regional-settings>
+      <environment>
+        <environment-types>
+          <environment-type id="development" name="Development" description="Development environment" color="-2430209/-12296320" readonly-code="false" readonly-data="false" />
+          <environment-type id="integration" name="Integration" description="Integration environment" color="-2621494/-12163514" readonly-code="true" readonly-data="false" />
+          <environment-type id="production" name="Production" description="Productive environment" color="-11574/-10271420" readonly-code="true" readonly-data="true" />
+          <environment-type id="other" name="Other" description="" color="-1576/-10724543" readonly-code="false" readonly-data="false" />
+        </environment-types>
+        <visibility-settings>
+          <connection-tabs value="true" />
+          <dialog-headers value="true" />
+          <object-editor-tabs value="true" />
+          <script-editor-tabs value="false" />
+          <execution-result-tabs value="true" />
+        </visibility-settings>
+      </environment>
+    </general-settings>
+  </component>
+  <component name="DBNavigator.Project.StatementExecutionManager">
+    <execution-variables />
+  </component>
+</project>

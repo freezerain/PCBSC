@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="price_default">0</integer>
+    <integer name="level_default">10</integer>
+    <integer name="wattage_default">0</integer>
+    <integer name="score_default">1000</integer>
+
+    <bool name="isDualGPU_default">false</bool>
+    <bool name="percentThrough_default">false</bool>
+    <bool name="isWatercooled_default">false</bool>
+
+    <bool name="channel1_default">true</bool>
+    <bool name="channel2_default">false</bool>
+    <bool name="channel3_default">false</bool>
+    <bool name="channel4_default">false</bool>
+</resources>

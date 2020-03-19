@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="isWatercooled">
+        <item>No WaterCooled GPUs</item>
+        <item>Include WaterCooled GPUs</item>
+        <item>Only WaterCooled GPUs</item>
+    </string-array>
+
+</resources>
