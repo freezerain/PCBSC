@@ -7,13 +7,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
-
 import com.freeze.pcbsc.MainActivity;
 import com.freeze.pcbsc.R;
 import com.freeze.pcbsc.sql.BuildDTO;
 import com.freeze.pcbsc.sql.DBHelper;
 import com.freeze.pcbsc.sql.SqlLibrary;
-
 import java.util.ArrayList;
 //Class Finished
 public class BuildListAsyncTask extends AsyncTask<Void, Integer, ArrayList<BuildDTO>> {

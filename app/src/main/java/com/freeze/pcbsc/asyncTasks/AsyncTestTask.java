@@ -1,16 +1,8 @@
 package com.freeze.pcbsc.asyncTasks;
 
-import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
-
-import com.freeze.pcbsc.MainActivity;
-import com.freeze.pcbsc.R;
-import com.freeze.pcbsc.sql.DBHelper;
-import com.freeze.pcbsc.sql.SqlLibrary;
-
 import static java.lang.Thread.sleep;
 
 //Test task for loading bar set up

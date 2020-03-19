@@ -1,24 +1,13 @@
 package com.freeze.pcbsc;
 
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
-import android.widget.Toast;
-
-import com.freeze.pcbsc.asyncTasks.AsyncTestTask;
-import com.freeze.pcbsc.asyncTasks.BuildListAsyncTask;
-import com.freeze.pcbsc.asyncTasks.BuildTableAsyncTask;
 import com.freeze.pcbsc.asyncTasks.GenerateTableAsyncTask;
-import com.freeze.pcbsc.sql.BuildDTO;
-import com.freeze.pcbsc.sql.SqlLibrary;
 import com.google.android.material.navigation.NavigationView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -29,11 +18,8 @@ import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
@@ -48,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBar);
         setupNavigation();
 
 
@@ -98,24 +84,23 @@ public class MainActivity extends AppCompatActivity implements
         switch (id) {
             case R.id.testFragment:
                 navController.navigate(R.id.testFragment, new Bundle(), navOptions);
+                Log.d("MainActivity", "Navigation item selected: Test fragment");
                 break;
             case R.id.buildsFragment:
+                Log.d("MainActivity", "Navigation item selected: builds Fragment");
                 navController.navigate(R.id.buildsFragment, new Bundle(), navOptions);
                 break;
         }
         return true;
-
     }
 
-    public void getData(final BuildTableFragment buildTableFragment){
+    public void getData(){
         Log.d(TAG, "getData() called");
         TableLayout tb = (TableLayout)findViewById(R.id.table);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         GenerateTableAsyncTask generateTableAsyncTask = new GenerateTableAsyncTask(this, progressBar);
         generateTableAsyncTask.execute();
-
-       //System.out.println(SqlLibrary.getGenerateBuildsStatement(false, 1));
     }
 
 }

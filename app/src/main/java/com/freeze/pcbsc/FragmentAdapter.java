@@ -1,9 +1,4 @@
 package com.freeze.pcbsc;
-
-import android.content.Context;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -13,8 +8,6 @@ public class FragmentAdapter extends FragmentPagerAdapter  implements BuildsFilt
     BuildsFragment buildsFragment;
     BuildTableFragment buildTableFragment;
     BuildsFilter buildsFilter;
-
-    Context context;
     public FragmentAdapter(FragmentManager fm, BuildsFragment buildsFragment) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.buildsFragment = buildsFragment;
@@ -37,8 +30,7 @@ public class FragmentAdapter extends FragmentPagerAdapter  implements BuildsFilt
 
     @Override
     public void searchButtonPressed() {
-        buildsFragment.switchTab(0,buildTableFragment);
-        //buildTableFragment.loadData();
+        buildsFragment.switchTab(0);
     }
 
     @Override
